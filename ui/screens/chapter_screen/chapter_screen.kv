@@ -1,0 +1,36 @@
+#:kivy 2.0.0
+# Đảm bảo bạn đang sử dụng Kivy 2.0.0 trở lên.
+
+# --------------------------------------------------------------------------
+# Định nghĩa quy tắc cho lớp ChapterScreen
+# --------------------------------------------------------------------------
+<ChapterScreen>:
+    name: 'chapter_screen' # Tên định danh duy nhất cho màn hình này
+
+    # Layout chính của màn hình: BoxLayout theo chiều dọc
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20) # Khoảng cách lề xung quanh
+        spacing: dp(10) # Khoảng cách giữa các widget con
+
+        # Label hiển thị văn bản demo
+        Label:
+            text: 'Đây là danh sách các chương (Demo)'
+            font_size: '24sp'
+            halign: 'center'    # Căn giữa ngang
+            valign: 'middle'    # Căn giữa dọc
+            text_size: self.size # Quan trọng để halign/valign hoạt động
+            size_hint_y: 1      # Chiếm hết không gian còn lại (đẩy nút xuống dưới)
+            color: 0.1, 0.4, 0.6, 1 # Màu xanh đậm
+
+        # Nút để quay lại ReaderScreen
+        Button:
+            text: 'Quay lại Màn hình Đọc Sách'
+            size_hint_y: None # Chiều cao cố định
+            height: dp(60)    # 60dp
+            font_size: '18sp'
+            # on_release: app.root.current = 'reader_screen'
+            # GHI CHÚ: Nếu bạn muốn truyền dữ liệu hoặc gọi hàm cụ thể
+            # trước khi chuyển màn hình, bạn sẽ dùng một hàm Python
+            # Ví dụ: on_release: root.go_back_to_reader()
+            on_release: app.root.current = 'reader_screen'
