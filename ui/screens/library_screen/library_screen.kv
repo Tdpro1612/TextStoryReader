@@ -1,0 +1,106 @@
+#:kivy 2.0.0
+
+<LibraryScreen>:
+    name: 'library_screen'
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: dp(70)
+            padding: dp(10)
+            spacing: dp(10)
+
+            Button:
+                text: 'Select file'
+                size_hint_y: None
+                height: dp(50)
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5) # Thêm padding nếu cần 
+                Image:
+                    source: 'assets/icons/file.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Button:
+                text: 'Select folder'
+                size_hint_y: None
+                height: dp(50)
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                Image:
+                    source: 'assets/icons/folder.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Button:
+                text: 'Settings'
+                size_hint_y: None
+                height: dp(50)
+                on_release: app.root.current = 'settings_screen'
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                Image:
+                    source: 'assets/icons/settings.webp' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Button:
+                text: 'Quit'
+                size_hint_y: None
+                height: dp(50)
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                Image:
+                    source: 'assets/icons/quit.webp' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Widget:
+                size_hint_y: 1
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(10)
+            spacing: dp(10)
+
+            Label:
+                text: 'Story Library'
+                size_hint_y: None
+                height: dp(60)
+                font_size: '30sp'
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+
+            ScrollView:
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(10)
+
+                    GridLayout:
+                        id: grid_layout_stories # Đây là ID mà Python sẽ tìm
+                        cols: 2
+                        spacing: dp(10)
+                        padding: dp(10)
+                        size_hint_y: None
+                        height: self.minimum_height
+            # ------------------------------------

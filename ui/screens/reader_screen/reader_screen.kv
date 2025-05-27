@@ -1,0 +1,58 @@
+#:kivy 2.0.0
+# reader_screen.kv
+
+<ReaderScreen>:
+    name: 'reader_screen'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10) # Điều chỉnh padding nếu cần
+        spacing: dp(5)  # Điều chỉnh spacing nếu cần
+
+        # Label cho TIÊU ĐỀ SÁCH
+        Label:
+            id: book_title_label # <-- GÁN ID CHO LABEL TIÊU ĐỀ
+            text: 'Loading Book Title...' # Text mặc định
+            font_size: '24sp'
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            size_hint_y: None
+            height: dp(60) # Chiều cao cố định cho tiêu đề
+
+        # ScrollView chứa nội dung sách (một Label lớn)
+        ScrollView:
+            id: book_scroll_view # <-- GÁN ID CHO SCROLLVIEW
+            size_hint_y: 1 # Để ScrollView chiếm hết không gian còn lại
+            do_scroll_x: False # Không cho phép cuộn ngang
+            bar_width: dp(10)
+            bar_color: 0.5, 0.5, 0.5, 1
+
+            Label:
+                id: book_content_label # <-- GÁN ID CHO LABEL NỘI DUNG SÁCH
+                text: 'Nội dung sách sẽ hiển thị ở đây' # Text mặc định
+                font_size: '18sp'
+                halign: 'left'
+                valign: 'top'
+                text_size: self.width, None # Quan trọng để text xuống dòng và chiếm hết chiều rộng
+                size_hint_y: None # Quan trọng để Label tự điều chỉnh chiều cao theo nội dung
+                height: self.texture_size[1] + dp(20) # Chiều cao của Label = chiều cao của text + padding
+                color: 0.8, 0.8, 0.8, 1 # Màu chữ dễ đọc trên nền tối
+                padding: dp(10), dp(10) # Padding bên trong Label
+
+        BoxLayout: # Layout cho các nút điều hướng dưới cùng
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(60)
+            spacing: dp(10)
+
+            Button:
+                text: 'Trở về Thư Viện'
+                on_release: app.root.current = 'library_screen'
+
+            Button:
+                text: 'Danh Sách Chương'
+                on_release: app.root.current = 'chapter_screen'
+
+            Button:
+                text: 'Settings'
+                on_release: app.root.current = 'settings_screen'
