@@ -46,13 +46,43 @@
             spacing: dp(10)
 
             Button:
-                text: 'Trở về Thư Viện'
+                size_hint_y: None
+                height: dp(50)
                 on_release: app.root.current = 'library_screen'
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                Image:
+                    source: 'assets/icons/back.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
 
             Button:
-                text: 'Danh Sách Chương'
+                size_hint_y: None
+                height: dp(50)
                 on_release: app.root.current = 'chapter_screen'
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                Image:
+                    source: 'assets/icons/chapter_list.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
 
             Button:
-                text: 'Settings'
+                size_hint_y: None
+                height: dp(50)
                 on_release: app.root.current = 'settings_screen'
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                Image:
+                    source: 'assets/icons/settings.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình

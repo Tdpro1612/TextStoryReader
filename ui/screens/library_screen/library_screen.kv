@@ -14,12 +14,13 @@
             spacing: dp(10)
 
             Button:
-                text: 'Select file'
+                # text: 'Select file'
                 size_hint_y: None
                 height: dp(50)
-                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-                # background_down: '' # Tắt nền khi nhấn
-                padding: dp(5) # Thêm padding nếu cần 
+                background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                on_release: app.open_file_chooser()
                 Image:
                     source: 'assets/icons/file.png' # Đường dẫn đến file icon của bạn
                     pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
@@ -28,12 +29,13 @@
                     keep_ratio: True        # Giữ tỷ lệ khung hình
 
             Button:
-                text: 'Select folder'
+                # text: 'Select folder'
                 size_hint_y: None
                 height: dp(50)
-                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-                # background_down: '' # Tắt nền khi nhấn
+                background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                background_down: '' # Tắt nền khi nhấn
                 padding: dp(5)
+                on_release: app.open_android_folder_chooser()
                 Image:
                     source: 'assets/icons/folder.png' # Đường dẫn đến file icon của bạn
                     pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
@@ -42,29 +44,30 @@
                     keep_ratio: True        # Giữ tỷ lệ khung hình
 
             Button:
-                text: 'Settings'
+                # text: 'Settings'
                 size_hint_y: None
                 height: dp(50)
                 on_release: app.root.current = 'settings_screen'
-                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-                # background_down: '' # Tắt nền khi nhấn
+                background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                background_down: '' # Tắt nền khi nhấn
                 padding: dp(5)
                 Image:
-                    source: 'assets/icons/settings.webp' # Đường dẫn đến file icon của bạn
+                    source: 'assets/icons/settings.png' # Đường dẫn đến file icon của bạn
                     pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
                     size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
                     allow_stretch: True     # Cho phép hình ảnh co giãn
                     keep_ratio: True        # Giữ tỷ lệ khung hình
 
             Button:
-                text: 'Quit'
+                # text: 'Quit'
                 size_hint_y: None
                 height: dp(50)
                 # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
                 # background_down: '' # Tắt nền khi nhấn
                 padding: dp(5)
+                on_release: app.stop()
                 Image:
-                    source: 'assets/icons/quit.webp' # Đường dẫn đến file icon của bạn
+                    source: 'assets/icons/quit.png' # Đường dẫn đến file icon của bạn
                     pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
                     size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
                     allow_stretch: True     # Cho phép hình ảnh co giãn

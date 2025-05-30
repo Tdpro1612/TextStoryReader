@@ -103,3 +103,5 @@ class LibraryScreen(Screen):
     def show_list_book(self):
         print("DEBUG (show_list_book): Gọi load_books() để làm mới danh sách.")
         self.load_books()
+
+
