@@ -21,7 +21,7 @@
 
         # ScrollView chứa nội dung sách (một Label lớn)
         ScrollView:
-            id: book_scroll_view # <-- GÁN ID CHO SCROLLVIEW
+            id: book_content_scroll_view # <-- GÁN ID CHO SCROLLVIEW
             size_hint_y: 1 # Để ScrollView chiếm hết không gian còn lại
             do_scroll_x: False # Không cho phép cuộn ngang
             bar_width: dp(10)
@@ -33,6 +33,7 @@
                 font_size: '18sp'
                 halign: 'left'
                 valign: 'top'
+                markup: True
                 text_size: self.width, None # Quan trọng để text xuống dòng và chiếm hết chiều rộng
                 size_hint_y: None # Quan trọng để Label tự điều chỉnh chiều cao theo nội dung
                 height: self.texture_size[1] + dp(20) # Chiều cao của Label = chiều cao của text + padding
