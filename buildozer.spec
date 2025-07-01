@@ -13,7 +13,7 @@ package.domain = com.tdpro1612
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,.ttf,.webp,.txt
+source.include_exts = py,png,jpg,kv,atlas,ttf,webp,txt,html
 
 # (list) List of directory to exclude (let empty to not exclude anything)
 source.include_dirs = assets,books,fonts,models,reader,ui
@@ -25,7 +25,7 @@ source.exclude_patterns = draft/*,test/*
 version = 0.1
 
 # (list) Application requirements
-requirements = python3==3.10.12,kivy==2.3.0,hostpython3==3.10.12,pyjnius==1.5.0,cython==0.29.33,plyer
+requirements = python3==3.10.12,kivy==2.3.0,hostpython3==3.10.12,pyjnius==1.5.0,cython==0.29.33,beautifulsoup4,typing-extensions
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
