@@ -20,7 +20,7 @@
                 background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
                 background_down: '' # Tắt nền khi nhấn
                 padding: dp(5)
-                on_release: app.open_file_chooser()
+                on_release: app.managers.book_manager.pick_file()
                 Image:
                     source: 'assets/icons/file.png' # Đường dẫn đến file icon của bạn
                     pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
@@ -35,7 +35,7 @@
                 background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
                 background_down: '' # Tắt nền khi nhấn
                 padding: dp(5)
-                on_release: app.open_android_folder_chooser()
+                on_release: app.managers.book_manager.pick_folder()
                 Image:
                     source: 'assets/icons/folder.png' # Đường dẫn đến file icon của bạn
                     pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
@@ -106,4 +106,16 @@
                         padding: dp(10)
                         size_hint_y: None
                         height: self.minimum_height
-            # ------------------------------------
+
+            # THÊM MỚI ĐOẠN NÀY
+            Label:
+                id: status_label # ID cho Label hiển thị trạng thái
+                text: '' # Mặc định là rỗng
+                size_hint_y: None
+                height: dp(30)
+                font_size: '14sp'
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.width, None # Cho phép text wrap nếu dài
+                color: (0.8, 0.2, 0.2, 1) # Ví dụ màu đỏ nhạt cho thông báo
+            # --------------------------------------------------------#
