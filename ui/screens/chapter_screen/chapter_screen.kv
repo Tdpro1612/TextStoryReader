@@ -1,32 +1,52 @@
-#:kivy 2.0.0
-# Đảm bảo bạn đang sử dụng Kivy 2.0.0 trở lên.
-
-# --------------------------------------------------------------------------
-# Định nghĩa quy tắc cho lớp ChapterScreen
-# --------------------------------------------------------------------------
 <ChapterScreen>:
-    name: 'chapter_screen' # Tên định danh duy nhất cho màn hình này
+    name: 'chapter_screen'
 
-    # Layout chính của màn hình: BoxLayout theo chiều dọc
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(20) # Khoảng cách lề xung quanh
-        spacing: dp(10) # Khoảng cách giữa các widget con
+        
+        # --- Thanh tiêu đề (mô phỏng Toolbar) ---
+        BoxLayout:
+            size_hint_y: None
+            height: dp(56) # Chiều cao tiêu chuẩn cho thanh tiêu đề
+            padding: dp(10)
+            spacing: dp(10)
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 1 # Màu nền của thanh tiêu đề (ví dụ: xám đậm)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
-        # Label hiển thị văn bản demo
-        Label:
-            text: 'Đây là danh sách các chương (Demo)'
-            font_size: '24sp'
-            halign: 'center'    # Căn giữa ngang
-            valign: 'middle'    # Căn giữa dọc
-            text_size: self.size # Quan trọng để halign/valign hoạt động
-            size_hint_y: 1      # Chiếm hết không gian còn lại (đẩy nút xuống dưới)
-            color: 0.1, 0.4, 0.6, 1 # Màu xanh đậm
+            Button:
+                id: back_button
+                size_hint_x: None
+                width: dp(40) # Kích thước cho nút back
+                background_normal: ''
+                background_down: ''
+                on_release: root._go_back()
+                Image:
+                    source: 'assets/icons/back.png' # Icon mũi tên quay lại
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    allow_stretch: True
+                    keep_ratio: True
+            
+            Label:
+                text: "Mục lục Chương"
+                font_size: '20sp'
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+                bold: True
 
-        # Nút để quay lại ReaderScreen
-        Button:
-            text: 'Quay lại Màn hình Đọc Sách'
-            size_hint_y: None # Chiều cao cố định
-            height: dp(60)    # 60dp
-            font_size: '18sp'
-            on_release: app.root.current = 'reader_screen'
+        # --- Vùng nội dung cuộn (danh sách chương hoặc thông báo) ---
+        ScrollView:
+            id: chapter_scroll_view # ID cho ScrollView nếu bạn cần tham chiếu
+            
+            BoxLayout:
+                id: chapter_list_container # Container để thêm các chương động hoặc thông báo
+                orientation: 'vertical'
+                size_hint_y: None # Cho phép BoxLayout này mở rộng chiều cao theo nội dung
+                height: self.minimum_height # Chiều cao tối thiểu sẽ là tổng chiều cao các item
+                padding: dp(10)
+                spacing: dp(5) # Khoảng cách giữa các mục chương
