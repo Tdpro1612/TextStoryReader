@@ -1,9 +1,11 @@
 # models/chapter.py
 
+
 class Chapter:
     """
     Đại diện cho một chương trong nội dung của sách, đã được xử lý và chia thành các trang.
     """
+
     def __init__(self, title: str):
         """
         Khởi tạo một đối tượng Chapter.
@@ -12,7 +14,9 @@ class Chapter:
             title (str): Tiêu đề của chương (ví dụ: "Chương 1: Bắt đầu cuộc phiêu lưu").
         """
         self.title = title
-        self.pages: list[str] = []  # Danh sách các chuỗi nội dung của từng trang sau khi đã phân tách
+        self.pages: list[
+            str
+        ] = []  # Danh sách các chuỗi nội dung của từng trang sau khi đã phân tách
 
     def add_page(self, page_content: str):
         """

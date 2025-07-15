@@ -1,6 +1,4 @@
 class Book:
-    
-
     def __init__(self, filename: str, title: str, filepath: str, file_type: str):
         """
         Args:

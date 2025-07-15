@@ -1,10 +1,11 @@
-import os
 import json
+import os
 
 # BOOK_FOLDER không còn là hằng số toàn cục nữa,
 # mà đường dẫn đến thư mục sách sẽ được quản lý bởi BookManager (hoặc nơi gọi hàm này)
 
-def read_book_txt(full_filepath): # Đổi tên tham số để rõ ràng hơn
+
+def read_book_txt(full_filepath):  # Đổi tên tham số để rõ ràng hơn
     """
     Đọc nội dung của file .txt từ một đường dẫn đầy đủ đã cho và chuyển đổi nó thành
     một danh sách chapter theo form chuẩn.
@@ -23,23 +24,27 @@ def read_book_txt(full_filepath): # Đổi tên tham số để rõ ràng hơn
     print(f"DEBUG (read_book_txt): Sách TXT đang được đọc từ '{full_filepath}'.")
 
     try:
-        with open(full_filepath, 'r', encoding='utf-8') as f:
+        with open(full_filepath, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Lấy tên file từ đường dẫn đầy đủ để làm tiêu đề
-        title = os.path.splitext(os.path.basename(full_filepath))[0].replace('_', ' ').title()
+        title = (
+            os.path.splitext(os.path.basename(full_filepath))[0]
+            .replace("_", " ")
+            .title()
+        )
 
         book_data = [
             {
-                'title': title,
-                'index': 0, # Vẫn là một chương duy nhất
-                'content': content.strip()
+                "title": title,
+                "index": 0,  # Vẫn là một chương duy nhất
+                "content": content.strip(),
             }
         ]
 
         # Tạo danh sách chapter đơn giản cho ChapterScreen
         chapter_list_for_chapter_screen = [
-            {'title': chapter['title'], 'link': chapter['index']}
+            {"title": chapter["title"], "link": chapter["index"]}
             for chapter in book_data
         ]
 
@@ -51,6 +56,7 @@ def read_book_txt(full_filepath): # Đổi tên tham số để rõ ràng hơn
     except Exception as e:
         print(f"LỖI đọc file TXT '{full_filepath}': {e}")
         return [], []
+
 
 # Hàm này không cần thay đổi gì, vì nó chỉ là logic chia chương
 def auto_split_chapter(text):
