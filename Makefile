@@ -18,11 +18,15 @@ format:
 	ruff format . # Code Formatter pep8, Sorts imports library, pylint logic
 	@echo "Python code formatted successfully."
 
-# If you prefer to use Ruff (which can do both formatting and import sorting):
-# format_ruff:
-# 	@echo "Formatting Python code using Ruff..."
-# 	ruff format .
-# 	@echo "Python code formatted successfully with Ruff."
+fix:
+	@echo "fix some python code...."
+	ruff check . --fix
+	@echo "fix done with ruff"
+# If you prefer to use lint :
+lint:
+	@echo "Scoring Python code using pylint..."
+	pylint $(shell find . -name "*.py" -print) --ignore=__init__.py
+	@echo "Python code score with pylint."
 
 
 # Target to clean buildozer temporary files
