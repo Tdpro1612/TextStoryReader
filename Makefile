@@ -10,9 +10,6 @@ help:
 	@echo "  make clean        - Clean build artifacts (e.g., buildozer temporary files)"
 	@echo "  make build        - Run buildozer to build the Android app"
 
-# Target to format Python code
-# Using black for formatting and isort for sorting imports
-# You can choose either black+isort OR ruff format
 format:
 	@echo "Formatting Python code..."
 	poetry run ruff format . # Code Formatter pep8, Sorts imports library, pylint logic
@@ -22,7 +19,7 @@ fix:
 	@echo "fix some python code...."
 	poetry run ruff check . --fix
 	@echo "fix done with ruff"
-# If you prefer to use lint :
+
 lint:
 	@echo "Scoring Python code using pylint..."
     # Sử dụng poetry run để đảm bảo pylint được chạy từ môi trường ảo của dự án
