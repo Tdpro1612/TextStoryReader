@@ -1,19 +1,17 @@
-# main.py
 import os
 
-import kivy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.metrics import (
     dp,
-)  # Import dp nếu bạn dùng nó cho kích thước widget trong Python
-from kivy.uix.boxlayout import BoxLayout  # Cần cho Popup
-from kivy.uix.button import Button  # Cần cho Popup
-from kivy.uix.label import Label  # Cần cho Popup
+)
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.screenmanager import ScreenManager
 
-from managers.book_manager import BookManager  # BookManager đã được import đúng cách
+from managers.book_manager import BookManager
 from managers.settings_model import AppSettings
 from ui.screens.chapter_screen.chapter_screen import ChapterScreen
 
@@ -32,7 +30,7 @@ class ManagerContainer:
 
 class TextStoryReaderApp(App):
     # Thêm tham chiếu đến book_reader instance
-    def build(self):
+    def build(self):  # pylint: disable=W0201
         # 1. Khởi tạo ManagerContainer
         self.managers = ManagerContainer()
 
@@ -43,7 +41,6 @@ class TextStoryReaderApp(App):
 
         # Khởi tạo AppSettings
         self.app_settings = AppSettings()
-        # self.managers.settings_model = self.app_settings # Nếu bạn muốn quản lý settings_model qua managers
 
         # Tải tất cả các file KV
         kv_files = self.load_kv_files("./ui")
@@ -89,9 +86,6 @@ class TextStoryReaderApp(App):
         if self.library_screen:
             self.library_screen.update_library_view()
 
-        # (Tùy chọn) Nếu bạn có status_label ở nơi khác ngoài LibraryScreen, bạn có thể cập nhật nó ở đây
-        # Ví dụ: app.root.ids.some_other_status_label.text = "Ứng dụng đã sẵn sàng!"
-
     def update_status_label(self, message):
         """
         Callback được BookManager gọi để cập nhật text của status_label trên LibraryScreen.
@@ -128,7 +122,8 @@ class TextStoryReaderApp(App):
                 "Cảnh báo UI", "Màn hình thư viện chưa sẵn sàng để cập nhật sách."
             )
 
-    def load_kv_files(self, directory):
+    @staticmethod
+    def load_kv_files(directory):
         kv_files = []
         for root, _, files in os.walk(directory):
             for file in files:
@@ -136,7 +131,8 @@ class TextStoryReaderApp(App):
                     kv_files.append(os.path.join(root, file))
         return kv_files
 
-    def show_simple_popup(self, title, message):
+    @staticmethod
+    def show_simple_popup(title, message):
         """
         Hiển thị một popup đơn giản. Hữu ích cho các thông báo chung.
         """
