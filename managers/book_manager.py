@@ -90,11 +90,9 @@ if platform == "android":
         PythonActivity = None
 
 
-class BookManager(
-    EventDispatcher
-):  # Kế thừa EventDispatcher nếu bạn muốn sử dụng bind/dispatch
+class BookManager:
+    
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)  # Gọi super().__init__() nếu kế thừa EventDispatcher
         self.book_folder_path = os.path.join(os.getcwd(), "books")
         self.is_android = False
         self.android_intent_handler = None  # Khởi tạo ban đầu là None
