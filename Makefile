@@ -1,5 +1,5 @@
 .PHONY: format clean help
-
+.PHONY: lint
 # Default target
 all: help
 
@@ -15,17 +15,20 @@ help:
 # You can choose either black+isort OR ruff format
 format:
 	@echo "Formatting Python code..."
-	ruff format . # Code Formatter pep8, Sorts imports library, pylint logic
+	poetry run ruff format . # Code Formatter pep8, Sorts imports library, pylint logic
 	@echo "Python code formatted successfully."
 
 fix:
 	@echo "fix some python code...."
-	ruff check . --fix
+	poetry run ruff check . --fix
 	@echo "fix done with ruff"
 # If you prefer to use lint :
 lint:
 	@echo "Scoring Python code using pylint..."
-	pylint $(shell find . -name "*.py" -print) --ignore=__init__.py
+    # Sử dụng poetry run để đảm bảo pylint được chạy từ môi trường ảo của dự án
+    # Chỉ định rõ pyproject.toml làm file cấu hình
+    # Chỉ định thư mục mã nguồn chính của bạn (textstoryreader/) để pylint chỉ kiểm tra code của bạn
+	poetry run pylint --rcfile=pyproject.toml textstoryreader/
 	@echo "Python code score with pylint."
 
 

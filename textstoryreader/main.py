@@ -3,7 +3,6 @@ import os
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
-
 from managers.book_manager import BookManager
 from managers.settings_model import AppSettings
 from ui.popup_utils import show_simple_popup
@@ -95,9 +94,7 @@ class TextStoryReaderApp(App):
             self.library_screen.ids.status_label.text = message
             print(f"UI Status Updated: {message}")
         else:
-            print(
-                f"WARNING (main.py): Không tìm thấy status_label hoặc LibraryScreen chưa sẵn sàng để cập nhật: {message}"
-            )
+            print(f"WARNING (main.py): Không tìm thấy status_label hoặc LibraryScreen chưa sẵn sàng để cập nhật: {message}")
             show_simple_popup("Cảnh báo UI", f"Không thể hiển thị trạng thái: {message}")
 
     def update_library_books_ui(self):

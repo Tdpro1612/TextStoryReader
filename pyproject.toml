@@ -26,7 +26,8 @@ ruff = "^0.12.4"
 pylint = "^3.3.7"
 
 [tool.ruff]
-line-length = 120
+line-length = 140
+
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
 
@@ -40,14 +41,16 @@ disable = [
     "useless-suppression",
     "deprecated-pragma",
     "use-symbolic-message-instead",
-    "C0301", # Line too long (Pylint's code for E501 in Ruff
+    "C0301", # Line too long (Pylint's code for E501 in Ruff)
     "W0201", # Attribute defined outside __init__
-    "E1101", # No member (e.g., trying to access a non-existent attribute
-    "E0611", # No name in module (e.g., trying to import a non-existent name
-    "C0103", # Invalid name (e.g., variable names not matching snake_case
+    "E1101", # No member (e.g., trying to access a non-existent attribute)
+    "E0611", # No name in module (e.g., trying to import a non-existent name)
+    "C0103", # Invalid name (e.g., variable names not matching snake_case)
     "C0116", # Missing function or method docstring
     "C0114", # Missing module docstring
     "C0115", # Missing class docstring
-    "R0903", # Too few public methods (e.g., a class with only 1-2 methods
+    "R0903", # Too few public methods (e.g., a class with only 1-2 methods)
 ]
+
+max-line-length = 140
 
