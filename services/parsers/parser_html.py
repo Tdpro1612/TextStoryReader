@@ -1,6 +1,4 @@
-import json
 import os
-import re
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 
@@ -161,7 +159,7 @@ def read_book_html(full_filepath):
                 {"index": 0, "title": "Không có nội dung"}
             )
             print(
-                f"DEBUG (read_book_html): File HTML rỗng hoặc không có nội dung hợp lệ."
+                "DEBUG (read_book_html): File HTML rỗng hoặc không có nội dung hợp lệ."
             )
 
         print(
@@ -170,10 +168,10 @@ def read_book_html(full_filepath):
         return book_data, chapter_list_for_chapter_screen
 
     except FileNotFoundError:
-        print(f"LỖI: Không tìm thấy file sách '{filepath}'")
+        print(f"LỖI: Không tìm thấy file sách '{full_filepath}'")
         return [], []
     except Exception as e:
-        print(f"LỖI đọc hoặc parse file HTML '{filepath}': {e}")
+        print(f"LỖI đọc hoặc parse file HTML '{full_filepath}': {e}")
         return [], []
 
 

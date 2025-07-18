@@ -1,18 +1,13 @@
 # Trong reader_screen.py
 
-import re
 
-from bs4 import BeautifulSoup
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.metrics import dp
 from kivy.properties import (
     ListProperty,
     NumericProperty,
-    ObjectProperty,
     StringProperty,
 )
-from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.utils import get_color_from_hex
 
@@ -148,7 +143,7 @@ class ReaderScreen(Screen):
             Clock.schedule_once(self.repaginate_on_next_frame, 0)
         else:
             print(
-                f"DEBUG (ReaderScreen): Kích thước không thay đổi đáng kể, không phân trang lại."
+                "DEBUG (ReaderScreen): Kích thước không thay đổi đáng kể, không phân trang lại."
             )
 
     def repaginate_on_next_frame(self, dt):
@@ -159,7 +154,7 @@ class ReaderScreen(Screen):
 
     def repaginate_current_chapter(self):
         print(
-            f"DEBUG (ReaderScreen): repaginate_current_chapter được gọi (chế độ 1 chương/1 trang)."
+            "DEBUG (ReaderScreen): repaginate_current_chapter được gọi (chế độ 1 chương/1 trang)."
         )
 
         if not self.book_data or not (

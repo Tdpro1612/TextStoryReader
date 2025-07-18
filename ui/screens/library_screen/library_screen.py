@@ -3,15 +3,12 @@
 import os
 
 from kivy.app import App
-from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
-from kivy.uix.scrollview import ScrollView
 
 # KHÔNG KHỞI TẠO book_manager Ở ĐÂY NỮA
 # from managers.book_manager import BookManager
@@ -22,8 +19,6 @@ class LibraryScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         print(f"DEBUG (LibraryScreen): __init__ method called! Instance: {self}")
-        # Không truy cập self.ids ở đây, vì nó chưa chắc đã được ánh xạ.
-        # Logic này sẽ được xử lý trong on_enter hoặc update_library_view.
 
     def on_enter(self, *args):
         # Khi màn hình được hiển thị, cập nhật giao diện thư viện
@@ -186,7 +181,8 @@ class LibraryScreen(Screen):
                 f"Không có nội dung nào được tìm thấy trong file sách '{os.path.basename(book_filename)}'.",
             )
 
-    def show_error_popup(self, title, message):
+    @staticmethod
+    def show_error_popup(title, message):
         """
         Hiển thị một cửa sổ Popup thông báo lỗi cho người dùng.
         """

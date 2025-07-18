@@ -1,4 +1,3 @@
-import json
 import os
 
 # BOOK_FOLDER không còn là hằng số toàn cục nữa,
