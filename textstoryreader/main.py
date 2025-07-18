@@ -2,17 +2,11 @@ import os
 
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.metrics import (
-    dp,
-)
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager
 
 from managers.book_manager import BookManager
 from managers.settings_model import AppSettings
+from ui.popup_utils import show_simple_popup
 from ui.screens.chapter_screen.chapter_screen import ChapterScreen
 
 # Import các màn hình và SettingsModel
@@ -46,12 +40,19 @@ class TextStoryReaderApp(App):
         kv_files = self.load_kv_files("./ui")
         for kv_file in kv_files:
             try:
-                Builder.load_file(
-                    kv_file
-                )  # Sử dụng load_file để tải từ đường dẫn đầy đủ
+                Builder.load_file(kv_file)
                 print(f"Đã tải file KV: {kv_file}")
-            except Exception as e:
-                print(f"Lỗi khi tải file KV {kv_file}: {e}")
+            except FileNotFoundError:
+                print(f"Lỗi: Không tìm thấy file KV '{kv_file}'.")
+            except PermissionError:
+                print(f"Lỗi: Không có quyền truy cập file KV '{kv_file}'.")
+                show_simple_popup("Lỗi Quyền Truy Cập", f"Không có quyền đọc file KV: {kv_file}")
+            except Builder.BuilderException as e:  # Bắt lỗi cú pháp hoặc cấu trúc KV
+                print(f"Lỗi cú pháp trong file KV '{kv_file}': {e}")
+                show_simple_popup("Lỗi KV", f"Lỗi cú pháp trong {kv_file}:\n{e}")
+            except OSError as e:
+                print(f"Lỗi hệ thống khi tải file KV '{kv_file}': {e}")
+                show_simple_popup("Lỗi Hệ Thống", f"Lỗi hệ thống khi tải {kv_file}:\n{e}")
 
         sm = ScreenManager()
 
@@ -90,20 +91,14 @@ class TextStoryReaderApp(App):
         """
         Callback được BookManager gọi để cập nhật text của status_label trên LibraryScreen.
         """
-        if (
-            self.library_screen
-            and hasattr(self.library_screen, "ids")
-            and "status_label" in self.library_screen.ids
-        ):
+        if self.library_screen and hasattr(self.library_screen, "ids") and "status_label" in self.library_screen.ids:
             self.library_screen.ids.status_label.text = message
             print(f"UI Status Updated: {message}")
         else:
             print(
                 f"WARNING (main.py): Không tìm thấy status_label hoặc LibraryScreen chưa sẵn sàng để cập nhật: {message}"
             )
-            self.show_simple_popup(
-                "Cảnh báo UI", f"Không thể hiển thị trạng thái: {message}"
-            )
+            show_simple_popup("Cảnh báo UI", f"Không thể hiển thị trạng thái: {message}")
 
     def update_library_books_ui(self):
         """
@@ -111,16 +106,10 @@ class TextStoryReaderApp(App):
         """
         if self.library_screen:
             self.library_screen.update_library_view()
-            print(
-                "DEBUG (main.py): LibraryScreen đã được yêu cầu cập nhật danh sách sách."
-            )
+            print("DEBUG (main.py): LibraryScreen đã được yêu cầu cập nhật danh sách sách.")
         else:
-            print(
-                "WARNING (main.py): LibraryScreen chưa sẵn sàng để cập nhật danh sách sách."
-            )
-            self.show_simple_popup(
-                "Cảnh báo UI", "Màn hình thư viện chưa sẵn sàng để cập nhật sách."
-            )
+            print("WARNING (main.py): LibraryScreen chưa sẵn sàng để cập nhật danh sách sách.")
+            show_simple_popup("Cảnh báo UI", "Màn hình thư viện chưa sẵn sàng để cập nhật sách.")
 
     @staticmethod
     def load_kv_files(directory):
@@ -130,35 +119,6 @@ class TextStoryReaderApp(App):
                 if file.endswith(".kv"):
                     kv_files.append(os.path.join(root, file))
         return kv_files
-
-    @staticmethod
-    def show_simple_popup(title, message):
-        """
-        Hiển thị một popup đơn giản. Hữu ích cho các thông báo chung.
-        """
-        content = BoxLayout(orientation="vertical", padding=dp(10), spacing=dp(10))
-        content.add_widget(
-            Label(
-                text=message,
-                halign="center",
-                valign="middle",
-                text_size=(dp(250), None),
-            )
-        )
-
-        close_button = Button(text="Đóng", size_hint=(1, None), height=dp(40))
-        content.add_widget(close_button)
-
-        popup = Popup(
-            title=title,
-            content=content,
-            size_hint=(None, None),
-            size=(dp(300), dp(200)),
-            auto_dismiss=False,
-        )
-
-        close_button.bind(on_release=popup.dismiss)
-        popup.open()
 
 
 if __name__ == "__main__":
