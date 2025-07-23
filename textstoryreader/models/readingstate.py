@@ -3,9 +3,8 @@ from typing import Any, Dict
 
 
 @dataclass
-class Book:
+class ReadingState:
     book_name: str
-    book_title: str
-    file_path: str
-    file_extension: str
+    last_chapter_order: int = 0
+    last_position_in_chapter: str
     
