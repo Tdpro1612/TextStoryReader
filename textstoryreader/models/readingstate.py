@@ -5,4 +5,4 @@ from dataclasses import dataclass
 class ReadingState:
     book_name: str
     last_chapter_order: int = 0
-    last_position_in_chapter: str
+    last_position_in_chapter: float = 0.0
