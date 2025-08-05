@@ -7,10 +7,7 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 
 
-def show_simple_popup(title, message):
-    """
-    Hiển thị một popup đơn giản. Hữu ích cho các thông báo chung.
-    """
+def show_error_popup(title, message):
     content = BoxLayout(orientation="vertical", padding=dp(10), spacing=dp(10))
     content.add_widget(
         Label(
