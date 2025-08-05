@@ -1,5 +1,4 @@
-from dataclasses import dataclass, field
-from typing import Any, Dict
+from dataclasses import dataclass
 
 
 @dataclass
@@ -8,4 +7,3 @@ class Book:
     book_title: str
     file_path: str
     file_extension: str
-    
