@@ -3,15 +3,15 @@ import os
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
-from managers.book_manager import BookManager
-from managers.settings_model import AppSettings
-from ui.popup_utils import show_simple_popup
-from ui.screens.chapter_screen.chapter_screen import ChapterScreen
+from textstoryreader.managers.book_manager import BookManager
+# from textstoryreader.managers.settings_model import AppSettings
+from textstoryreader.ui.popup_utils import show_error_popup
+from textstoryreader.ui.screens.chapter_screen.chapter_screen import ChapterScreen
 
 # Import các màn hình và SettingsModel
-from ui.screens.library_screen.library_screen import LibraryScreen
-from ui.screens.reader_screen.reader_screen import ReaderScreen
-from ui.screens.settings.settings_screen import SettingsScreen
+from textstoryreader.ui.screens.library_screen.library_screen import LibraryScreen
+# from textstoryreader.ui.screens.reader_screen.reader_screen import ReaderScreen
+# from textstoryreader.ui.screens.settings.settings_screen import SettingsScreen
 
 
 class ManagerContainer:
@@ -45,13 +45,13 @@ class TextStoryReaderApp(App):
                 print(f"Lỗi: Không tìm thấy file KV '{kv_file}'.")
             except PermissionError:
                 print(f"Lỗi: Không có quyền truy cập file KV '{kv_file}'.")
-                show_simple_popup("Lỗi Quyền Truy Cập", f"Không có quyền đọc file KV: {kv_file}")
+                show_error_popup("Lỗi Quyền Truy Cập", f"Không có quyền đọc file KV: {kv_file}")
             except Builder.BuilderException as e:  # Bắt lỗi cú pháp hoặc cấu trúc KV
                 print(f"Lỗi cú pháp trong file KV '{kv_file}': {e}")
-                show_simple_popup("Lỗi KV", f"Lỗi cú pháp trong {kv_file}:\n{e}")
+                show_error_popup("Lỗi KV", f"Lỗi cú pháp trong {kv_file}:\n{e}")
             except OSError as e:
                 print(f"Lỗi hệ thống khi tải file KV '{kv_file}': {e}")
-                show_simple_popup("Lỗi Hệ Thống", f"Lỗi hệ thống khi tải {kv_file}:\n{e}")
+                show_error_popup("Lỗi Hệ Thống", f"Lỗi hệ thống khi tải {kv_file}:\n{e}")
 
         sm = ScreenManager()
 
@@ -95,7 +95,7 @@ class TextStoryReaderApp(App):
             print(f"UI Status Updated: {message}")
         else:
             print(f"WARNING (main.py): Không tìm thấy status_label hoặc LibraryScreen chưa sẵn sàng để cập nhật: {message}")
-            show_simple_popup("Cảnh báo UI", f"Không thể hiển thị trạng thái: {message}")
+            show_error_popup("Cảnh báo UI", f"Không thể hiển thị trạng thái: {message}")
 
     def update_library_books_ui(self):
         """
@@ -106,7 +106,7 @@ class TextStoryReaderApp(App):
             print("DEBUG (main.py): LibraryScreen đã được yêu cầu cập nhật danh sách sách.")
         else:
             print("WARNING (main.py): LibraryScreen chưa sẵn sàng để cập nhật danh sách sách.")
-            show_simple_popup("Cảnh báo UI", "Màn hình thư viện chưa sẵn sàng để cập nhật sách.")
+            show_error_popup("Cảnh báo UI", "Màn hình thư viện chưa sẵn sàng để cập nhật sách.")
 
     @staticmethod
     def load_kv_files(directory):
