@@ -23,7 +23,7 @@ class SettingsManager:
     def load_settings(self) -> Settings:
         if os.path.exists(self.settings_file):
             try:
-                with open(self.settings_file, "r") as f:
+                with open(self.settings_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     return Settings(**data)
             except (json.JSONDecodeError, TypeError):
@@ -32,5 +32,5 @@ class SettingsManager:
 
     def save_settings(self, settings_object: Settings):
         os.makedirs(os.path.dirname(self.settings_file), exist_ok=True)
-        with open(self.settings_file, "w") as f:
+        with open(self.settings_file, "w", encoding="utf-8") as f:
             json.dump(asdict(settings_object), f, indent=4)
