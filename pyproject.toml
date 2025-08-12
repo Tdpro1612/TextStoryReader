@@ -41,6 +41,7 @@ disable = [
     "useless-suppression",
     "deprecated-pragma",
     "use-symbolic-message-instead",
+    "W0718", # catching err from try except
     "C0301", # Line too long (Pylint's code for E501 in Ruff)
     "W0201", # Attribute defined outside __init__
     "E1101", # No member (e.g., trying to access a non-existent attribute)
