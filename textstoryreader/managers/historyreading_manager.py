@@ -4,6 +4,7 @@ from typing import Dict
 
 from textstoryreader.models.readingstate import ReadingState
 
+
 class HistoryReadingManager:
     def __init__(self, json_path="textstoryreader/data/history.json"):
         self.history: Dict[str, ReadingState] = {}
@@ -13,9 +14,7 @@ class HistoryReadingManager:
     def save_history(self, book_name: str, last_chapter_order: int, last_position_in_chapter: float):
         print(f"DEBUG (ReadingHistoryManager): Saved history last_chapter_order for {last_chapter_order}")
         self.history[book_name] = ReadingState(
-            book_name=book_name, 
-            last_chapter_order=last_chapter_order, 
-            last_position_in_chapter=last_position_in_chapter
+            book_name=book_name, last_chapter_order=last_chapter_order, last_position_in_chapter=last_position_in_chapter
         )
         print(f"DEBUG (ReadingHistoryManager): Saved history for {book_name}")
         self.save_to_file()
@@ -34,12 +33,7 @@ class HistoryReadingManager:
         try:
             with open(self.json_path, "w", encoding="utf-8") as f:
                 # Convert all ReadingState objects to dict before dumping
-                json.dump(
-                    {k: v.to_dict() for k, v in self.history.items()}, 
-                    f, 
-                    ensure_ascii=False, 
-                    indent=2
-                )
+                json.dump({k: v.to_dict() for k, v in self.history.items()}, f, ensure_ascii=False, indent=2)
             print(f"DEBUG (ReadingHistoryManager): History saved to {self.json_path}")
         except Exception as e:
             print(f"ERROR (ReadingHistoryManager): Cannot save history to {self.json_path}: {e}")
