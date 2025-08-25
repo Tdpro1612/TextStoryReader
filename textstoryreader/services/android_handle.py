@@ -69,6 +69,10 @@ if platform == "android":
 
 
 class AndroidHandle:
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.is_android = platform == "android"
+
     def get_android_paths(self):
         self.book_folder_path = None
         try:
@@ -90,7 +94,7 @@ class AndroidHandle:
 
     def pick_file(self):
         if not self.is_android:
-            self._report_status("Chức năng chỉ có trên Android.")
+            print("BookManager Status: Chức năng chỉ có trên Android.")
             return
 
         try:
@@ -113,7 +117,6 @@ class AndroidHandle:
 
         except Exception as e:
             print(f"Lỗi khi khởi chạy Intent chọn tệp: {e}")
-            self._report_status(f"Lỗi khởi chạy chọn tệp: {e}")
             # Đảm bảo gỡ listener nếu có lỗi ngay sau khi khởi chạy Intent
             if self.android_intent_handler:
                 current_activity.unregisterActivityResultListener(self.android_intent_handler)
@@ -121,7 +124,7 @@ class AndroidHandle:
 
     def pick_folder(self):
         if not self.is_android:
-            self._report_status("Chức năng chỉ có trên Android.")
+            print("BookManager Status: Chức năng chỉ có trên Android.")
             return
 
         try:
@@ -167,7 +170,7 @@ class AndroidHandle:
                 self.android_intent_handler = None  # Đặt lại để chuẩn bị cho lần chọn tiếp theo
 
         if resultCode == RESULT_CANCELED or uri is None:
-            self._report_status("Người dùng đã hủy hoặc không có dữ liệu được chọn.")
+            print("WARNING: Người dùng đã hủy hoặc không có dữ liệu được chọn.")
             return
 
         if requestCode == REQUEST_CODE_PICK_FILE:
@@ -175,7 +178,6 @@ class AndroidHandle:
         elif requestCode == REQUEST_CODE_PICK_FOLDER:
             self._handle_folder_pick_result_internal(uri)
         else:
-            self._report_status(f"RequestCode không xác định: {requestCode}")
             print(f"WARNING: Unknown requestCode received: {requestCode}")
 
     def _handle_file_pick_result_internal(self, uri):
@@ -186,6 +188,7 @@ class AndroidHandle:
             content_resolver = context.getContentResolver()
 
             display_name = "unknown_file"
+            file_size = -1
             try:
                 # Đảm bảo đóng cursor sau khi sử dụng
                 with content_resolver.query(uri, None, None, None, None) as cursor:
@@ -194,10 +197,22 @@ class AndroidHandle:
                         if display_name_column_index != -1:
                             display_name = cursor.getString(display_name_column_index)
                             print(f"DEBUG: Found display name: {display_name}")
+                        # Lấy kích thước tệp (file_size)
+                        size_column_index = cursor.getColumnIndex(autoclass("android.provider.OpenableColumns").SIZE)
+                        if size_column_index != -1:
+                            # Dùng getLong để đảm bảo lấy đúng giá trị, tránh tràn số
+                            file_size = cursor.getLong(size_column_index)
+                            print(f"DEBUG: Found file size: {file_size} bytes")
             except Exception as e_cursor:
                 print(f"Lỗi khi lấy tên hiển thị từ URI: {e_cursor}")
+            if not display_name.lower().endswith(tuple(SUPPORTED_EXTENSIONS)):
+                print(f"BookManager Status: Tệp không hợp lệ: {display_name}")
+                return
 
-            # Tạo đường dẫn đích trong thư mục sách của ứng dụng
+            if self._is_file_duplicate(display_name, file_size):
+                print(f"BookManager Status: Tệp đã tồn tại: {display_name}")
+                return
+
             dest_file_path = os.path.join(self.book_folder_path, display_name)
 
             # Copy nội dung từ URI sang tệp đích
@@ -211,12 +226,10 @@ class AndroidHandle:
                         bytes_read = input_stream.read(buffer)
             print(f"DEBUG: Đã sao chép tệp '{display_name}' vào '{dest_file_path}'")
 
-            self._report_status(f"Đã nhập sách: {display_name}")
-            self._trigger_ui_update()  # Yêu cầu UI cập nhật danh sách sách
+            print(f"BookManager Status: Đã nhập sách: {display_name}")
 
         except Exception as e:
-            print(f"Lỗi khi xử lý tệp đã chọn: {e}")
-            self._report_status(f"Lỗi nhập sách: {e}")
+            print(f"BookManager Status: Lỗi nhập sách: {e}")
 
     def _handle_folder_pick_result_internal(self, uri):
         """Logic xử lý kết quả chọn folder."""
@@ -228,8 +241,7 @@ class AndroidHandle:
             root_document = DocumentFile.fromTreeUri(context, uri)
 
             if root_document is None:
-                print("Lỗi: Không thể lấy DocumentFile từ URI.")
-                self._report_status("Lỗi: Không thể chọn thư mục.")
+                print("BookManager Status: Lỗi: Không thể chọn thư mục.")
                 return
 
             # Giữ quyền truy cập URI (Rất quan trọng cho SAF)
@@ -238,12 +250,11 @@ class AndroidHandle:
             # Lưu URI này vào config file hoặc lưu trữ cục bộ để có thể truy cập lại sau này
 
             self._process_document_tree(root_document)
-            self._report_status(f"Đã nhập sách từ thư mục: {root_document.getName()}")
-            self._trigger_ui_update()  # Yêu cầu UI cập nhật danh sách sách
+            print(f"BookManager Status: Đã nhập sách từ thư mục: {root_document.getName()}")
 
         except Exception as e:
             print(f"Lỗi khi xử lý thư mục đã chọn: {e}")
-            self._report_status(f"Lỗi nhập thư mục: {e}")
+            print(f"BookManager Status: Lỗi nhập thư mục: {e}")
 
     def _process_document_tree(self, document_file_root):
         """
@@ -259,6 +270,10 @@ class AndroidHandle:
                 file_name = child_document.getName()
 
                 if any(file_name.lower().endswith(ext) for ext in SUPPORTED_EXTENSIONS):
+                    file_size = child_document.length()
+                    if self._is_file_duplicate(file_name, file_size):
+                        print(f"DEBUG: Bỏ qua tệp '{file_name}' vì đã tồn tại và trùng lặp.")
+                        continue
                     try:
                         dest_file_path = os.path.join(self.book_folder_path, file_name)
 
@@ -278,3 +293,26 @@ class AndroidHandle:
                         print(f"Lỗi khi sao chép tệp '{file_name}': {e}")
                 else:
                     print(f"DEBUG: Bỏ qua tệp không hợp lệ: {file_name}")
+
+    def _is_file_duplicate(self, file_name, file_size):
+        """
+        Kiểm tra xem một tệp có trùng lặp trong thư mục đích hay không.
+        Trùng lặp được xác định bằng cách so sánh tên tệp và kích thước.
+        """
+        dest_file_path = os.path.join(self.book_folder_path, file_name)
+
+        # Kiểm tra sự tồn tại của tệp
+        if not os.path.exists(dest_file_path):
+            return False  # Tệp chưa tồn tại, không phải trùng lặp
+
+        # So sánh kích thước của tệp
+        try:
+            if os.path.getsize(dest_file_path) == file_size:
+                return True  # Cùng tên và cùng kích thước, có khả năng cao là trùng lặp
+        except Exception as e:
+            print(f"Lỗi khi lấy kích thước tệp: {e}")
+
+        return False  # Kích thước không khớp hoặc có lỗi, coi như không trùng lặp
+
+
+my_android_handler = AndroidHandle()
