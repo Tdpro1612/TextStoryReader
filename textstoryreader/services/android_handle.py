@@ -72,6 +72,7 @@ class AndroidHandle:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.is_android = platform == "android" and PythonActivity
+        self.android_intent_handler = None
         self.book_folder_path = os.path.join(os.getcwd(), "textstoryreader/books")
         if self.is_android:
             print("DEBUG (BookManager): Đang chạy trên Android, thiết lập đường dẫn Android.")
