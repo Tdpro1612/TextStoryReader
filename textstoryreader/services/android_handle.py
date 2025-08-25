@@ -71,10 +71,19 @@ if platform == "android":
 class AndroidHandle:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.is_android = platform == "android"
+        self.is_android = platform == "android" and PythonActivity
+        self.book_folder_path = os.path.join(os.getcwd(), "textstoryreader/books")
+        if self.is_android:
+            print("DEBUG (BookManager): Đang chạy trên Android, thiết lập đường dẫn Android.")
+            self._get_android_paths()
+            self._ensure_folders_exist()
+            print(f"DEBUG (BookManager): Thư mục sách android (self.book_folder_path): {self.book_folder_path}")
+        else:
+            self._ensure_folders_exist()
+            print(f"DEBUG (BookManager): Thư mục sách PC (self.book_folder_path): {self.book_folder_path}")
+        
 
-    def get_android_paths(self):
-        self.book_folder_path = None
+    def _get_android_paths(self):
         try:
             context = PythonActivity.mActivity
             # Lấy đường dẫn tới thư mục tài liệu riêng tư của ứng dụng
@@ -83,7 +92,6 @@ class AndroidHandle:
             print(f"DEBUG (BookManager): Thiết lập self.book_folder_path Android (App Private): {self.book_folder_path}")
         except Exception as e:
             print(f"Lỗi khi lấy đường dẫn Android: {e}. Đang dùng đường dẫn mặc định.")
-        return self.book_folder_path
 
     def _ensure_folders_exist(self):
         try:

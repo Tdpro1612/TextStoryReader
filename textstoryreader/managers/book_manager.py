@@ -2,18 +2,16 @@ import os
 from typing import List
 
 from kivy.app import App
-from kivy.utils import platform
 
 from textstoryreader.constants import SUPPORTED_EXTENSIONS
 from textstoryreader.models.book import Book
-from textstoryreader.services.android_handle import AndroidHandle, PythonActivity
+from textstoryreader.services.android_handle import my_android_handler
 
 
 class BookManager:
     def __init__(self):
-        self.book_folder_path = None
+        self.book_folder_path = my_android_handler.book_folder_path
         self._books = []
-        self.android_handle = AndroidHandle()
 
     def add_book(self):
         pass
@@ -29,12 +27,7 @@ class BookManager:
         pass
 
     def get_book_list(self) -> List[Book]:
-        self._books.clear()  # Xóa danh sách sách hiện tại
-        if platform == "android" and PythonActivity:
-            self.book_folder_path = self.android_handle.get_android_paths()
-        else:
-            self.book_folder_path = os.path.join(os.getcwd(), "textstoryreader/books")
-
+        self._books.clear()
         files_in_folder = os.listdir(self.book_folder_path)
         for book_name in files_in_folder:
             book_file_path = os.path.join(self.book_folder_path, book_name)
