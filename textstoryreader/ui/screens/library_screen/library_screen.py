@@ -104,7 +104,13 @@ class LibraryScreen(Screen):
             )
 
     def pick_file(self):
+        print(f"DEBUG (LibraryScreen - pick_file): Picking file...")
         my_android_handler.pick_file()
+        print(f"DEBUG (LibraryScreen - pick_file): reload display file")
+        self.update_library_view()
 
     def pick_folder(self):
+        print(f"DEBUG (LibraryScreen - pick_folder): Picking folder...")
         my_android_handler.pick_folder()
+        print(f"DEBUG (LibraryScreen - pick_folder): reload display folder")
+        self.update_library_view()
