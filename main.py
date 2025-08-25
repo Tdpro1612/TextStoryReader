@@ -3,40 +3,47 @@ import os
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
+
 from textstoryreader.managers.book_manager import BookManager
-# from textstoryreader.managers.settings_model import AppSettings
-from textstoryreader.ui.popup_utils import show_error_popup
+from textstoryreader.managers.settings_manager import SettingsManager
 from textstoryreader.ui.screens.chapter_screen.chapter_screen import ChapterScreen
 
 # Import các màn hình và SettingsModel
 from textstoryreader.ui.screens.library_screen.library_screen import LibraryScreen
-# from textstoryreader.ui.screens.reader_screen.reader_screen import ReaderScreen
-# from textstoryreader.ui.screens.settings.settings_screen import SettingsScreen
+from textstoryreader.ui.screens.reader_screen.reader_screen import ReaderScreen
+from textstoryreader.ui.screens.settings.settings_screen import SettingsScreen
+from textstoryreader.ui.utils import show_error_popup
 
 
 class ManagerContainer:
     def __init__(self):
         self.book_manager = None
-
-        # self.settings_model = None # Có thể thêm các manager khác ở đây
+        self.settings_manager = None
+        self.history_manager = None
 
 
 class TextStoryReaderApp(App):
-    # Thêm tham chiếu đến book_reader instance
-    def build(self):  # pylint: disable=W0201
-        # 1. Khởi tạo ManagerContainer
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.managers = ManagerContainer()
-
-        # 2. Khởi tạo BookManager và gán vào ManagerContainer
         self.managers.book_manager = BookManager()
+        self.managers.settings_manager = SettingsManager()
+        self.current_settings = self.managers.settings_manager.load_settings()
 
+    def update_settings(self):
+        # Tải đối tượng Settings mới
+        new_settings = self.managers.settings_manager.load_settings()
+
+        # Cập nhật từng thuộc tính một, điều này sẽ kích hoạt Kivy events
+        self.current_settings.font_name = new_settings.font_name
+        self.current_settings.font_size = new_settings.font_size
+        self.current_settings.text_color = new_settings.text_color
+        self.current_settings.background_color = new_settings.background_color
+
+    def build(self):
         print(f"DEBUG (main.py): Kivy user_data_dir: {self.user_data_dir}")
 
-        # Khởi tạo AppSettings
-        self.app_settings = AppSettings()
-
-        # Tải tất cả các file KV
-        kv_files = self.load_kv_files("./ui")
+        kv_files = self.load_kv_files("textstoryreader/ui")
         for kv_file in kv_files:
             try:
                 Builder.load_file(kv_file)
@@ -54,20 +61,13 @@ class TextStoryReaderApp(App):
                 show_error_popup("Lỗi Hệ Thống", f"Lỗi hệ thống khi tải {kv_file}:\n{e}")
 
         sm = ScreenManager()
-
-        # Lưu một tham chiếu đến LibraryScreen instance
         self.library_screen = LibraryScreen(name="library_screen")
         sm.add_widget(self.library_screen)
 
-        # Thiết lập callbacks cho BookManager sau khi LibraryScreen đã được tạo và thêm vào SM
-        # Điều này đảm bảo 'self.library_screen' đã có giá trị
-        self.managers.book_manager.set_ui_callbacks(
-            status_callback=self.update_status_label,
-            update_book_list_callback=self.update_library_books_ui,
-        )
-
         # Thêm các màn hình khác
-        sm.add_widget(ReaderScreen(name="reader_screen"))
+        self.reader_screen = ReaderScreen(name="reader_screen", settings=self.current_settings)
+        sm.add_widget(self.reader_screen)
+
         sm.add_widget(ChapterScreen(name="chapter_screen"))
         sm.add_widget(SettingsScreen(name="settings_screen"))
 
@@ -76,37 +76,23 @@ class TextStoryReaderApp(App):
 
         return sm
 
-    def on_start(self):
+    def on_stop(self):
         """
-        Được gọi sau khi `build` hoàn tất và ứng dụng đang khởi chạy.
-        Đây là nơi tốt để cập nhật UI lần đầu.
+        Phương thức này được gọi khi ứng dụng sắp bị đóng.
+        Dùng để lưu trạng thái đọc hiện tại.
         """
-        print("DEBUG (main.py): on_start called. Triggering initial UI update.")
-        # Yêu cầu LibraryScreen cập nhật danh sách sách ban đầu
-        if self.library_screen:
-            self.library_screen.update_library_view()
+        print("DEBUG: Ứng dụng sắp bị đóng. Tiến hành lưu trạng thái đọc.")
+        # Lấy tham chiếu đến màn hình ReaderScreen
+        reader_screen = self.root.get_screen("reader_screen")
 
-    def update_status_label(self, message):
-        """
-        Callback được BookManager gọi để cập nhật text của status_label trên LibraryScreen.
-        """
-        if self.library_screen and hasattr(self.library_screen, "ids") and "status_label" in self.library_screen.ids:
-            self.library_screen.ids.status_label.text = message
-            print(f"UI Status Updated: {message}")
-        else:
-            print(f"WARNING (main.py): Không tìm thấy status_label hoặc LibraryScreen chưa sẵn sàng để cập nhật: {message}")
-            show_error_popup("Cảnh báo UI", f"Không thể hiển thị trạng thái: {message}")
-
-    def update_library_books_ui(self):
-        """
-        Callback được BookManager gọi để yêu cầu LibraryScreen tải lại danh sách sách.
-        """
-        if self.library_screen:
-            self.library_screen.update_library_view()
-            print("DEBUG (main.py): LibraryScreen đã được yêu cầu cập nhật danh sách sách.")
-        else:
-            print("WARNING (main.py): LibraryScreen chưa sẵn sàng để cập nhật danh sách sách.")
-            show_error_popup("Cảnh báo UI", "Màn hình thư viện chưa sẵn sàng để cập nhật sách.")
+        # Kiểm tra xem màn hình đó có đang hiển thị hay không và có đối tượng book_reader
+        if self.root.current == "reader_screen" and reader_screen.book_reader:
+            try:
+                # Gọi hàm lưu trạng thái đọc từ ReaderScreen
+                reader_screen.save_history_reader()
+                print("DEBUG: Đã lưu trạng thái đọc thành công.")
+            except Exception as e:
+                print(f"ERROR: Lỗi khi lưu trạng thái đọc: {e}")
 
     @staticmethod
     def load_kv_files(directory):
