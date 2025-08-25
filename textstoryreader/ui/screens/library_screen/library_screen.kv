@@ -1,0 +1,123 @@
+#:kivy 2.0.0
+
+<LibraryScreen>:
+    name: 'library_screen'
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: dp(70)
+            padding: dp(10)
+            spacing: dp(10)
+
+            Button:
+                # text: 'Select file'
+                size_hint_y: None
+                height: dp(50)
+                background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                on_release: root.pick_file()
+                Image:
+                    source: 'textstoryreader/assets/icons/file.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Button:
+                # text: 'Select folder'
+                size_hint_y: None
+                height: dp(50)
+                background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                on_release: root.pick_folder()
+                Image:
+                    source: 'textstoryreader/assets/icons/folder.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Button:
+                # text: 'Settings'
+                size_hint_y: None
+                height: dp(50)
+                on_release: 
+                    app.root.current = 'settings_screen'
+                    app.root.get_screen('settings_screen').previous_screen = 'library_screen'
+                background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                Image:
+                    source: 'textstoryreader/assets/icons/settings.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Button:
+                # text: 'Quit'
+                size_hint_y: None
+                height: dp(50)
+                # background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
+                # background_down: '' # Tắt nền khi nhấn
+                padding: dp(5)
+                on_release: app.stop()
+                Image:
+                    source: 'textstoryreader/assets/icons/back.png' # Đường dẫn đến file icon của bạn
+                    pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
+                    size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
+                    allow_stretch: True     # Cho phép hình ảnh co giãn
+                    keep_ratio: True        # Giữ tỷ lệ khung hình
+
+            Widget:
+                size_hint_y: 1
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(10)
+            spacing: dp(10)
+
+            Label:
+                text: 'Story Library'
+                size_hint_y: None
+                height: dp(60)
+                font_size: '30sp'
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+
+            ScrollView:
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(10)
+
+                    GridLayout:
+                        id: grid_layout_stories # Đây là ID mà Python sẽ tìm
+                        cols: 2
+                        spacing: dp(10)
+                        padding: dp(10)
+                        size_hint_y: None
+                        height: self.minimum_height
+
+            # THÊM MỚI ĐOẠN NÀY
+            # Label:
+            #     id: status_label # ID cho Label hiển thị trạng thái
+            #     text: '' # Mặc định là rỗng
+            #     size_hint_y: None
+            #     height: dp(30)
+            #     font_size: '14sp'
+            #     halign: 'center'
+            #     valign: 'middle'
+            #     text_size: self.width, None # Cho phép text wrap nếu dài
+            #     color: (0.8, 0.2, 0.2, 1) # Ví dụ màu đỏ nhạt cho thông báo
+            # --------------------------------------------------------#
