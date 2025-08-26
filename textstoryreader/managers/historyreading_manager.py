@@ -9,7 +9,29 @@ class HistoryReadingManager:
     def __init__(self, json_path="textstoryreader/data/history.json"):
         self.history: Dict[str, ReadingState] = {}
         self.json_path = json_path
+        self.ensure_path_exists()
         self.load_history()
+
+    def ensure_path_exists(self):
+        """
+        Đảm bảo thư mục chứa tệp tin JSON tồn tại.
+        Nếu không, sẽ tạo thư mục và tệp tin rỗng.
+        """
+        # Lấy đường dẫn của thư mục
+        directory = os.path.dirname(self.json_path)
+
+        # Kiểm tra nếu thư mục không tồn tại
+        if not os.path.exists(directory):
+            print(f"Thư mục '{directory}' không tồn tại, đang tạo...")
+            os.makedirs(directory)
+            print("Đã tạo thư mục thành công.")
+
+        # Kiểm tra nếu tệp tin không tồn tại
+        if not os.path.exists(self.json_path):
+            print(f"Tệp tin '{self.json_path}' không tồn tại, đang tạo tệp rỗng...")
+            with open(self.json_path, 'w', encoding='utf-8') as f:
+                json.dump({}, f)  # Ghi một đối tượng JSON rỗng vào tệp
+            print("Đã tạo tệp thành công.")
 
     def save_history(self, book_name: str, last_chapter_order: int, last_position_in_chapter: float):
         print(f"DEBUG (ReadingHistoryManager): Saved history last_chapter_order for {last_chapter_order}")

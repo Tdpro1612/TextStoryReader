@@ -3,10 +3,9 @@ import os
 from textstoryreader.managers.historyreading_manager import HistoryReadingManager
 from textstoryreader.models.book import Book
 from textstoryreader.models.readingstate import ReadingState
-from textstoryreader.services.android_handle import AndroidHandle
 from textstoryreader.services.parser_handle import ParserHandle
 from textstoryreader.ui.utils import show_error_popup
-
+from textstoryreader.services.android_handle import my_android_handler
 
 class BookReader:
     def __init__(self, book: Book):
@@ -15,7 +14,6 @@ class BookReader:
         self.last_chapter_order = 0
         self.last_position_in_chapter = 1.0
         self.book_data = None
-        self.android_handle = AndroidHandle()
         self.content_list = []
         self.chapter_list = []
         self.parser_handle = ParserHandle(self.book)
@@ -32,10 +30,8 @@ class BookReader:
         )
 
     def load_all_content_book(self):
-        if self.android_handle.is_android:
-            self.book.file_path = os.path.join(self.android_handle.get_android_paths(), self.book.book_name)
-        else:
-            self.book.file_path = f"textstoryreader/books/{self.book.book_name}"
+        self.book.file_path = os.path.join(my_android_handler.book_folder_path, self.book.book_name)
+        print(f"DEBUG <BookReader>  file path of book is {self.book.file_path}")
         if self.book_data:
             return self.book_data
         self.book_data = self.parser_handle.parse()
