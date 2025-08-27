@@ -1,7 +1,7 @@
 # library_screen.py
-
-
+import os
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.metrics import dp
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -22,13 +22,40 @@ class LibraryScreen(Screen):
             self.book_manager_instance = app.managers.book_manager
             print("DEBUG (LibraryScreen): BookManager instance retrieved from App.managers.")
         else:
-            print("ERROR (LibraryScreen): BookManager not found in App.managers. Make sure it's initialized in your App class.")
-            show_error_popup(
-                "Lỗi Khởi Tạo",
-                "Không thể tìm thấy BookManager.\nVui lòng kiểm tra cấu hình ứng dụng.",
-            )
-            self.book_manager_instance = None
+            print("ERROR (LibraryScreen): BookManager not found in App.managers.")
+            show_error_popup("Lỗi", "Không tìm thấy BookManager.")
+            return 
         self.update_library_view()
+        folder_path = self.book_manager_instance.book_folder_path
+        if not os.path.exists(folder_path):
+            print(f"ERROR: Thư mục {folder_path} không tồn tại.")
+            self.last_snapshot = set()
+        else:
+            self.last_snapshot = set(os.listdir(folder_path))
+
+        # Bắt đầu polling
+        self._poll_event = Clock.schedule_interval(self.check_folder_changes, 3)
+
+    def on_leave(self, *args):
+        if hasattr(self, "_poll_event"):
+            Clock.unschedule(self._poll_event)
+
+    def check_folder_changes(self, dt):
+        folder_path = self.book_manager_instance.book_folder_path
+        if not os.path.exists(folder_path):
+            print(f"WARNING: Thư mục {folder_path} bị xóa hoặc không tồn tại.")
+            return
+
+        try:
+            current_snapshot = set(os.listdir(folder_path))
+        except Exception as e:
+            print(f"ERROR khi đọc thư mục: {e}")
+            return
+
+        if current_snapshot != self.last_snapshot:
+            print("DEBUG: Folder changed, updating UI")
+            self.last_snapshot = current_snapshot
+            self.update_library_view()
 
     def update_library_view(self):
         if self.book_manager_instance is None:
@@ -107,10 +134,8 @@ class LibraryScreen(Screen):
         print(f"DEBUG (LibraryScreen - pick_file): Picking file...")
         my_android_handler.pick_file()
         print(f"DEBUG (LibraryScreen - pick_file): reload display file")
-        self.update_library_view()
 
     def pick_folder(self):
         print(f"DEBUG (LibraryScreen - pick_folder): Picking folder...")
         my_android_handler.pick_folder()
         print(f"DEBUG (LibraryScreen - pick_folder): reload display folder")
-        self.update_library_view()
