@@ -31,7 +31,7 @@ class SettingsScreen(Screen):
         self.font_name = self.font_name.strip()
         self.text_color = self.text_color
         self.background_color = self.background_color
-        self.font_size = max(8, min(self.font_size, 72))
+        self.font_size = max(18, min(self.font_size, 36))
         settings_new = Settings(
             font_name="textstoryreader/assets/fonts/" + self.font_name,
             font_size=self.font_size,
