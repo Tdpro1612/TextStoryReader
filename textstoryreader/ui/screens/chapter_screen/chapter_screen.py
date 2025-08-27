@@ -40,7 +40,7 @@ class ChapterScreen(Screen):
             )
             item.bind(on_release=lambda x, index=indexchapter: self.on_chapter_selected(index))
             self.chapter_list_container.add_widget(item)
-            print(f"DEBUG (ChapterScreen): Đã tải {len(chapter_data_list)} chương vào danh sách.")
+        print(f"DEBUG (ChapterScreen): Đã tải {len(chapter_data_list)} chương vào danh sách.")
 
     def display_no_chapter(self):
         self.chapter_list_container.clear_widgets()
