@@ -25,13 +25,19 @@ class SettingsScreen(Screen):
     def go_back(self):
         app = App.get_running_app()
         App.get_running_app().update_settings()
-        app.root.current = self.previous_screen
+        if self.previous_screen == "reader_screen":
+            reader_screen = app.root.get_screen("reader_screen")
+            reader_screen.apply_settings()
+            reader_screen.show_current_page()
+            app.root.current = "reader_screen"
+        else:
+            app.root.current = self.previous_screen
 
     def save_settings(self):
         self.font_name = self.font_name.strip()
         self.text_color = self.text_color
         self.background_color = self.background_color
-        self.font_size = max(18, min(self.font_size, 36))
+        self.font_size = max(10, min(self.font_size, 72))
         settings_new = Settings(
             font_name="textstoryreader/assets/fonts/" + self.font_name,
             font_size=self.font_size,

@@ -1,6 +1,7 @@
 <ReaderScreen>:
     BoxLayout:
         orientation: 'vertical'
+        
         # Màu nền (nếu bạn có canvas riêng thì thêm ở đây), ví dụ:
         canvas.before:
             Color:
@@ -9,109 +10,142 @@
                 pos: self.pos
                 size: self.size
 
-        ScrollView:
-            id: scroll_view
-            do_scroll_x: False
-            do_scroll_y: True
-            bar_width: dp(8)
-            # Không bind một chiều scroll_y: root.scroll_y nữa!
-            # Thay bằng on_scroll_y để đồng bộ giá trị thực tế sang root
-            on_scroll_y: root.scroll_y = self.scroll_y
+        # Layout cho nội dung chính của trang
+        BoxLayout:
+            id: content_container
+            orientation: 'vertical'
+            size_hint: 1, 1 # Đảm bảo BoxLayout chiếm toàn bộ không gian còn lại
+            padding: dp(15), dp(20)
 
-            BoxLayout:
+            Label:
+                id: chapter_content
+                text: root.page_content  # Thay đổi thành page_content
+                font_name: root.font_name
+                font_size: sp(root.font_size)
+                color: root.text_color
+                text_size: self.width, None
+                size_hint_y: 1 # Đảm bảo Label tự giãn nở để lấp đầy không gian
+                valign: 'top'
+                halign: 'left'
+                line_height: root.line_spacing
+                canvas_texture_size: None, None
+        
+        # Layout cho các nút điều hướng trang và chương (thêm next/prev page)
+        BoxLayout: 
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(60)
+            
+            # Button: Go Back
+            Button:
                 size_hint_y: None
-                height: self.minimum_height
-                padding: dp(15), dp(20)
+                height: dp(50)
+                on_release: root.go_back()
+                # background_normal: ''
+                # background_down: ''
+                # padding: dp(5)
+                # background_color: 0, 0, 0, 0
+                Image:
+                    source: 'textstoryreader/assets/icons/back.png'
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    allow_stretch: True
+                    keep_ratio: True
+            
+            # Button: Previous Page
+            Button:
+                size_hint_y: None
+                height: dp(50)
+                on_release: root.go_to_previous_page()  # Thêm hàm chuyển trang
+                # background_normal: ''
+                # background_down: ''
+                # padding: dp(5)
+                # background_color: 0, 0, 0, 0
+                Image:
+                    source: 'textstoryreader/assets/icons/back_page.png'
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    allow_stretch: True
+                    keep_ratio: True
+            
+            # Button: Previous Chapter
+            # Button:
+            #     size_hint_y: None
+            #     height: dp(50)
+            #     on_release: root.back_chapter()
+            #     background_normal: ''
+            #     background_down: ''
+            #     padding: dp(5)
+            #     background_color: 0, 0, 0, 0
+            #     Image:
+            #         source: 'textstoryreader/assets/icons/back_page.png'
+            #         pos: self.parent.pos
+            #         size: self.parent.size
+            #         allow_stretch: True
+            #         keep_ratio: True
+            
+            # Button: Chapter List
+            Button:
+                size_hint_y: None
+                height: dp(50)
+                on_release: app.root.current = 'chapter_screen'
+                # background_normal: ''
+                # background_down: ''
+                # padding: dp(5)
+                # background_color: 0, 0, 0, 0
+                Image:
+                    source: 'textstoryreader/assets/icons/chapter_list.png'
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    allow_stretch: True
+                    keep_ratio: True
 
-                Label:
-                    id: chapter_content
-                    text: root.chapter_text
-                    font_name: root.font_name
-                    font_size: dp(root.font_size)
-                    color: root.text_color
-                    text_size: self.width, None
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                    valign: 'top'
-                    halign: 'left'
-                    line_height: root.line_spacing
+            # Button: Next Chapter
+            # Button:
+            #     size_hint_y: None
+            #     height: dp(50)
+            #     on_release: root.next_chapter()
+            #     background_normal: ''
+            #     background_down: ''
+            #     padding: dp(5)
+            #     background_color: 0, 0, 0, 0
+            #     Image:
+            #         source: 'textstoryreader/assets/icons/next_page.png'
+            #         pos: self.parent.pos
+            #         size: self.parent.size
+            #         allow_stretch: True
+            #         keep_ratio: True
+                    
+            # Button: Next Page
+            Button:
+                size_hint_y: None
+                height: dp(50)
+                on_release: root.go_to_next_page()  # Thêm hàm chuyển trang
+                # background_normal: ''
+                # background_down: ''
+                # padding: dp(5)
+                # background_color: 0, 0, 0, 0
+                Image:
+                    source: 'textstoryreader/assets/icons/next_page.png'
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    allow_stretch: True
+                    keep_ratio: True
 
-    BoxLayout: # Layout cho các nút điều hướng dưới cùng
-        orientation: 'horizontal'
-        size_hint_y: None
-        height: dp(60)
-        # spacing: dp(10)
-        Button:
-            size_hint_y: None
-            height: dp(50)
-            on_release: root.go_back()
-            background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-            background_down: '' # Tắt nền khi nhấn
-            padding: dp(5)
-            background_color: 0, 0, 0, 0
-            Image:
-                source: 'textstoryreader/assets/icons/back.png' # Đường dẫn đến file icon của bạn
-                pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
-                size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
-                allow_stretch: True     # Cho phép hình ảnh co giãn
-                keep_ratio: True        # Giữ tỷ lệ khung hình
-        Button:
-            size_hint_y: None
-            height: dp(50)
-            on_release: root.back_chapter()
-            background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-            background_down: '' # Tắt nền khi nhấn
-            padding: dp(5)
-            background_color: 0, 0, 0, 0
-            Image:
-                source: 'textstoryreader/assets/icons/back_page.png' # Đường dẫn đến file icon của bạn
-                pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
-                size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
-                allow_stretch: True     # Cho phép hình ảnh co giãn
-                keep_ratio: True        # Giữ tỷ lệ khung hình
-
-        Button:
-            size_hint_y: None
-            height: dp(50)
-            on_release: app.root.current = 'chapter_screen'
-            background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-            background_down: '' # Tắt nền khi nhấn
-            padding: dp(5)
-            background_color: 0, 0, 0, 0
-            Image:
-                source: 'textstoryreader/assets/icons/chapter_list.png' # Đường dẫn đến file icon của bạn
-                pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
-                size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
-                allow_stretch: True     # Cho phép hình ảnh co giãn
-                keep_ratio: True        # Giữ tỷ lệ khung hình
-        Button:
-            size_hint_y: None
-            height: dp(50)
-            on_release: root.next_chapter()
-            background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-            background_down: '' # Tắt nền khi nhấn
-            padding: dp(5)
-            background_color: 0, 0, 0, 0
-            Image:
-                source: 'textstoryreader/assets/icons/next_page.png' # Đường dẫn đến file icon của bạn
-                pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
-                size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
-                allow_stretch: True     # Cho phép hình ảnh co giãn
-                keep_ratio: True        # Giữ tỷ lệ khung hình
-
-        Button:
-            size_hint_y: None
-            height: dp(50)
-            on_release: 
-                app.root.current = 'settings_screen'
-                app.root.get_screen('settings_screen').previous_screen = 'reader_screen'
-            background_normal: '' # Tắt nền mặc định của button để chỉ hiển thị icon
-            background_down: '' # Tắt nền khi nhấn
-            padding: dp(5)
-            background_color: 0, 0, 0, 0
-            Image:
-                source: 'textstoryreader/assets/icons/settings.png' # Đường dẫn đến file icon của bạn
-                pos: self.parent.pos    # Vị trí của Image = vị trí của Button cha (self.parent)
-                size: self.parent.size  # Kích thước của Image = kích thước của Button cha (self.parent)
-                allow_stretch: True     # Cho phép hình ảnh co giãn
-                keep_ratio: True        # Giữ tỷ lệ khung hình
+            # Button: Settings
+            Button:
+                size_hint_y: None
+                height: dp(50)
+                on_release: 
+                    app.root.current = 'settings_screen'
+                    app.root.get_screen('settings_screen').previous_screen = 'reader_screen'
+                # background_normal: ''
+                # background_down: ''
+                # padding: dp(5)
+                # background_color: 0, 0, 0, 0
+                Image:
+                    source: 'textstoryreader/assets/icons/settings.png'
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    allow_stretch: True
+                    keep_ratio: True

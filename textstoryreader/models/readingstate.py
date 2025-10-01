@@ -5,13 +5,13 @@ from dataclasses import dataclass
 class ReadingState:
     book_name: str
     last_chapter_order: int = 0
-    last_position_in_chapter: float = 0.0
+    index_word_start: int = 0
 
     def to_dict(self):
         return {
             "book_name": self.book_name,
             "last_chapter_order": self.last_chapter_order,
-            "last_position_in_chapter": self.last_position_in_chapter,
+            "index_word_start": self.index_word_start,
         }
 
     @classmethod
@@ -19,5 +19,5 @@ class ReadingState:
         return cls(
             book_name=data.get("book_name", ""),
             last_chapter_order=data.get("last_chapter_order", 0),
-            last_position_in_chapter=data.get("last_position_in_chapter", 1.0),
+            index_word_start=data.get("index_word_start", 0),
         )

@@ -29,14 +29,14 @@ class HistoryReadingManager:
         # Kiểm tra nếu tệp tin không tồn tại
         if not os.path.exists(self.json_path):
             print(f"Tệp tin '{self.json_path}' không tồn tại, đang tạo tệp rỗng...")
-            with open(self.json_path, 'w', encoding='utf-8') as f:
+            with open(self.json_path, "w", encoding="utf-8") as f:
                 json.dump({}, f)  # Ghi một đối tượng JSON rỗng vào tệp
             print("Đã tạo tệp thành công.")
 
-    def save_history(self, book_name: str, last_chapter_order: int, last_position_in_chapter: float):
+    def save_history(self, book_name: str, last_chapter_order: int = 0, index_word_start: int = 0) -> None:
         print(f"DEBUG (ReadingHistoryManager): Saved history last_chapter_order for {last_chapter_order}")
         self.history[book_name] = ReadingState(
-            book_name=book_name, last_chapter_order=last_chapter_order, last_position_in_chapter=last_position_in_chapter
+            book_name=book_name, last_chapter_order=last_chapter_order, index_word_start=index_word_start
         )
         print(f"DEBUG (ReadingHistoryManager): Saved history for {book_name}")
         self.save_to_file()
