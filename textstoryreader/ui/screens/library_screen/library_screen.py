@@ -1,5 +1,6 @@
 # library_screen.py
 import os
+
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.metrics import dp
@@ -24,7 +25,7 @@ class LibraryScreen(Screen):
         else:
             print("ERROR (LibraryScreen): BookManager not found in App.managers.")
             show_error_popup("Lỗi", "Không tìm thấy BookManager.")
-            return 
+            return
         self.update_library_view()
         folder_path = self.book_manager_instance.book_folder_path
         if not os.path.exists(folder_path):
@@ -131,11 +132,11 @@ class LibraryScreen(Screen):
             )
 
     def pick_file(self):
-        print(f"DEBUG (LibraryScreen - pick_file): Picking file...")
+        print("DEBUG (LibraryScreen - pick_file): Picking file...")
         my_android_handler.pick_file()
-        print(f"DEBUG (LibraryScreen - pick_file): reload display file")
+        print("DEBUG (LibraryScreen - pick_file): reload display file")
 
     def pick_folder(self):
-        print(f"DEBUG (LibraryScreen - pick_folder): Picking folder...")
+        print("DEBUG (LibraryScreen - pick_folder): Picking folder...")
         my_android_handler.pick_folder()
-        print(f"DEBUG (LibraryScreen - pick_folder): reload display folder")
+        print("DEBUG (LibraryScreen - pick_folder): reload display folder")

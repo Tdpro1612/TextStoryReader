@@ -82,7 +82,6 @@ class AndroidHandle:
         else:
             self._ensure_folders_exist()
             print(f"DEBUG (BookManager): Thư mục sách PC (self.book_folder_path): {self.book_folder_path}")
-        
 
     def _get_android_paths(self):
         try:
