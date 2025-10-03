@@ -76,7 +76,7 @@ Quá trình tối ưu hóa hiệu suất hiển thị text đã trải qua nhi�
 | :--- | :--- | :--- |
 | **Sử dụng `ScrollView`** | Toàn bộ nội dung tệp (kể cả tệp 10MB) được nhét vào Label Widget, gây **treo UI** và **tràn bộ nhớ (OOM)**. | **Loại bỏ `ScrollView`**. Chuyển sang mô hình **Chia Trang Logic** (Paging). |
 | **Chia trang Vật lý/Số Ký tự cố định** | Do font chữ và kích thước Widget thay đổi, các dòng không được điền đầy đủ số ký tự dự kiến, dẫn đến **khoảng trắng thừa lớn** và trang không tối ưu, do không tính khi có dấu xuống dòng dẫn đến hiển thị không đầy đủ. | Chuyển sang **chia trang theo Từ** (Word Token). Tính toán **Index Từ Bắt Đầu** để lưu trữ vị trí chính xác nhất. |
-| **Tốc độ xử lý tệp lớn** | Việc đọc và xử lý tệp lớn trên luồng chính (Main Thread) làm ứng dụng **đóng băng** khi khởi động. | **đọc tệp, Phân tách từ (tokenization) và tạo list từ** tính toán số từ cần thiết rồi truyền cho UI, giải phóng bộ nhớ cho UI khỏi phải xử lí nặng nề |
+| **Chỉ tính toán số từ cần thiết truyền UI** |  | **đọc tệp, Phân tách từ (tokenization) và tạo list từ** tính toán số từ cần thiết rồi truyền cho UI, giải phóng bộ nhớ cho UI khỏi phải xử lí nặng nề |
 
 -----
 
